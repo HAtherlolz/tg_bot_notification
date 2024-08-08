@@ -16,7 +16,7 @@ from repositories.mongodb import (
 
 @celery_app.task()
 def check_msg():
-    time_delta = datetime.now() - timedelta(minutes=1)
+    time_delta = datetime.now() - timedelta(minutes=14)
     log.info(f"time_delta, {time_delta}")
 
     last_messages = MessageRepository.get_last_message_from_all_group_chats()
