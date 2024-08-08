@@ -1,0 +1,55 @@
+version: '3.7'
+services:
+  bot:
+    container_name: tg_bot
+    build: .
+    restart: always
+    env_file: .env
+    command: sh -c "python main.py"
+    depends_on:
+      - mongo
+      - redis
+    volumes:
+     - .:/app
+
+  mongo:
+    image: mongo:latest
+    container_name: mongo
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+
+  redis:
+    image: redis
+    ports:
+      - "6379:6379"
+    restart: always
+    hostname: redis
+    container_name: redis
+    volumes:
+      - ../BAS/redis:/data
+
+  celery_worker:
+    container_name: celery_worker
+    build: .
+    command: celery -A cfg.celery_conf worker --pool=solo --loglevel=info
+    volumes:
+      - .:/app
+    depends_on:
+      - redis
+      - bot
+
+  celery_beat:
+    container_name: celery_beat
+    build: .
+    command: celery -A cfg.celery_conf beat --loglevel=info
+    volumes:
+      - .:/app
+    depends_on:
+      - redis
+      - bot
+      - celery_worker
+
+volumes:
+  mongo_data:
