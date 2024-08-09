@@ -67,7 +67,8 @@ class MessageRepository:
         group_chats = ChatRepository.get_all_group_chats()
         for chat in group_chats:
             last_msg = cls.db.find_one({"chat_id": chat.chat_id}, sort=[("created_at", -1)])
-            last_msgs.append(MessageSchema(**last_msg))
+            if last_msg:
+                last_msgs.append(MessageSchema(**last_msg))
         return last_msgs
 
     @classmethod
