@@ -23,9 +23,10 @@ class Bot:
             context: ContextTypes.DEFAULT_TYPE,
     ) -> None:
 
-        utc_date_time = update.message.date if hasattr(update.message, 'date') else None
-        if not utc_date_time:
-            utc_date_time = datetime.now()
+        if update.message:
+            utc_date_time = update.message.date if hasattr(update.message, 'date') else None
+            if not utc_date_time:
+                utc_date_time = datetime.now()
 
         gmt_plus_3 = ZoneInfo('Etc/GMT-3')  # 'Etc/GMT-3' corresponds to GMT+3
         local_date_time = utc_date_time.astimezone(gmt_plus_3)
