@@ -34,8 +34,8 @@ def check_msg():
                 (last_message.created_at < time_delta)
                 and
                 (last_message.username not in moderators_usernames)
-                and
-                (not last_message.is_notified)
+                # and
+                # (not last_message.is_notified)
                 and
                 (
                         ("stark" not in first_name.lower())
@@ -48,7 +48,7 @@ def check_msg():
                 "username": last_message.username,
                 "name": last_message.name,
             })
-            MessageRepository.mark_msg_as_notified(last_message)  # Set msg to notified
+            # MessageRepository.mark_msg_as_notified(last_message)  # Set msg to notified
 
     if advertisers:
         # Build the notification message
