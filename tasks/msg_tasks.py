@@ -19,29 +19,35 @@ def check_msg():
     time_delta = datetime.now() - timedelta(minutes=14)
     log.info(f"time_delta, {time_delta}")
 
-    last_messages = MessageRepository.get_last_message_from_all_group_chats()
+    last_messages_today = MessageRepository.get_last_message_from_all_group_chats_for_today()
     moderators = UserRepository.get_all_moderators()
     moderators_usernames = [moderator.username for moderator in moderators]
 
     moderators_group_chat = ChatRepository.get_admins_chat_id()
 
     advertisers = []
-    for last_message in last_messages:
+    messages_to_ignore = [
+        "thanks", "thank", "no", "moment", "atm", "noted",
+        "pushing", "us", "thank you", "need", "push"
+    ]
+    for last_message in last_messages_today:
         first_name = last_message.first_name if last_message.first_name else ''
         last_name = last_message.last_name if last_message.last_name else ''
 
         if (
                 (last_message.created_at < time_delta)
-                and
-                (last_message.username not in moderators_usernames)
+                and (
+                    last_message.username not in moderators_usernames)
+                and (
+                    ("stark" not in first_name.lower())
+                    and
+                    (last_name.lower() != "stark")
+                )
+                and (
+                    last_message.message.lower() not in messages_to_ignore
+                )
                 # and
                 # (not last_message.is_notified)
-                and
-                (
-                        ("stark" not in first_name.lower())
-                        and
-                        (last_name.lower() != "stark")
-                )
         ):
             advertisers.append({
                 "chat_id": last_message.chat_id,

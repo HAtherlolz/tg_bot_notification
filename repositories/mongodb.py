@@ -1,4 +1,5 @@
 from typing import List
+from datetime import datetime
 
 from pymongo.collection import Collection
 
@@ -62,12 +63,20 @@ class MessageRepository:
         return True
 
     @classmethod
-    def get_last_message_from_all_group_chats(cls) -> List[MessageSchema]:
+    def get_last_message_from_all_group_chats_for_today(cls) -> List[MessageSchema]:
         last_msgs = []
         group_chats = ChatRepository.get_all_group_chats()
-        print("group_chats", group_chats)
+
+        # Get the current date at midnight
+        today_start = datetime.combine(datetime.today(), datetime.min.time())
+
         for chat in group_chats:
-            last_msg = cls.db.find_one({"chat_id": chat.chat_id}, sort=[("created_at", -1)])
+            last_msg = cls.db.find_one(
+                {
+                    "chat_id": chat.chat_id,
+                    "created_at": {"$gte": today_start}
+                },
+                sort=[("created_at", -1)])
             if last_msg:
                 last_msgs.append(MessageSchema(**last_msg))
         return last_msgs
