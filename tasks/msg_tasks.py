@@ -53,7 +53,7 @@ def check_msg():
     if advertisers:
         notification_message = (
             "These are the advertisers that are waiting for a reply:\n" +
-            "\n".join(f"{adv['name']} - @{adv['username']}" for adv in advertisers)
+            "\n".join(f"- {adv['name']} - @{adv['username']}" for adv in advertisers)
         )
 
     loop = asyncio.get_event_loop()
