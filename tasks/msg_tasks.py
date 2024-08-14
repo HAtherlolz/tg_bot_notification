@@ -51,10 +51,9 @@ def check_msg():
             # MessageRepository.mark_msg_as_notified(last_message)  # Set msg to notified
 
     if advertisers:
-        # Build the notification message
         notification_message = (
-                "These are the advertisers that are waiting for a reply:\n" +
-                "\n".join(f"- ADV @{adv['username']} from chat - {adv['name']}" for adv in advertisers)
+            "These are the advertisers that are waiting for a reply:\n" +
+            "\n".join(f"{adv['name']} - @{adv['username']}" for adv in advertisers)
         )
 
     loop = asyncio.get_event_loop()
