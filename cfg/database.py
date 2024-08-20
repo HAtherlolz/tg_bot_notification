@@ -10,6 +10,7 @@ db = client["DB"]
 msg_db = db["messages"]
 chat_db = db["chats"]
 user_db = db["users"]
+ignored_user_db = db["ignored_users"]
 
 
 def ping_db():

@@ -1,14 +1,15 @@
-from typing import List
+from typing import List, Dict
 from datetime import datetime
 
 from pymongo.collection import Collection
 
 from schemas.chats import ChatSchema
-from schemas.messages import MessageSchema
 from schemas.users import UserSchema
+from schemas.messages import MessageSchema
+from schemas.igonred_users import IgnoredUserSchema
 
 from cfg.config import settings
-from cfg.database import msg_db, chat_db, user_db
+from cfg.database import msg_db, chat_db, user_db, ignored_user_db
 
 from utils.logs import log
 
@@ -118,3 +119,25 @@ class UserRepository:
             cls.db.update_one({"username": username}, {"$set": {"receive_notifications": receive_notifications}})
             return True
         return False
+
+
+class IgnoredUserRepository:
+    db: Collection = ignored_user_db
+
+    @classmethod
+    def set_ignored_user(
+            cls,
+            user: IgnoredUserSchema
+    ) -> bool:
+        ignored_user = cls.db.find({"username": user.username})
+        if list(ignored_user):
+            return False
+
+        cls.db.insert_one(user.dict())
+        return True
+
+    @classmethod
+    def get_list_ignored_users(cls) -> List[IgnoredUserSchema]:
+        ignored_user = cls.db.find()
+        return [IgnoredUserSchema(**ign_usr) for ign_usr in ignored_user]
+
