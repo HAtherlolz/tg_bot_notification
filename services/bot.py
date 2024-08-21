@@ -1,3 +1,4 @@
+from typing import List
 from zoneinfo import ZoneInfo
 from datetime import datetime
 
@@ -131,8 +132,13 @@ class Bot:
             return
 
         command = update.message.text
-        username: str = command.split(" ")[1]
+        msg: List[str] = command.split(" ")
+        if len(msg) != 2:
+            await update.message.reply_text(f"The command is incorrect \n"
+                                            f"Correct from is - /ignore 'username'")
+            return
 
+        username: str = command.split(" ")[1]
         if "@" in username:
             user: IgnoredUserSchema = IgnoredUserSchema(username=username[1:])
         else:
