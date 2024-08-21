@@ -1,3 +1,4 @@
+from typing import List
 from zoneinfo import ZoneInfo
 from datetime import datetime
 
@@ -9,9 +10,12 @@ from utils.logs import log
 from cfg.config import settings
 
 from schemas.users import UserSchema
+from schemas.igonred_users import IgnoredUserSchema
+
 from repositories.mongodb import (
     ChatRepository, MessageRepository,
-    MessageSchema, ChatSchema, UserRepository
+    MessageSchema, ChatSchema, UserRepository,
+    IgnoredUserRepository
 )
 
 
@@ -87,6 +91,8 @@ class Bot:
             await Bot.create_moderator(query, context)
         elif query.data == 'get_all_moderators':
             await Bot.moderators_list(query, context)
+        # elif query.data == 'ignore':
+        #     await Bot.ignore(query, context)
 
     @staticmethod
     async def help_command(update: Update, context: CallbackContext) -> None:
@@ -96,6 +102,7 @@ class Bot:
             "/help - Show help message\n"
             "/set_moderator - Make me a moderator\n"
             "/get_all_moderators - Get all moderators"
+            "/ignore {username you want to ignore} - Set user's username to ignore for notification list"
         )
 
     @staticmethod
@@ -114,3 +121,37 @@ class Bot:
         moderators = UserRepository.get_all_moderators()
         moderators_list = "\n".join([f"@{mod.username}" for mod in moderators])
         await update.message.reply_text(f"Moderators:\n{moderators_list}")
+
+    @staticmethod
+    async def ignore(
+            update: Update,
+            context: CallbackContext
+    ) -> None:
+
+        if not update.message:
+            return
+
+        command = update.message.text
+        msg: List[str] = command.split(" ")
+        if len(msg) != 2:
+            await update.message.reply_text(f"The command is incorrect \n"
+                                            f"Correct from is - /ignore 'username'")
+            return
+
+        username: str = command.split(" ")[1]
+        if "@" in username:
+            user: IgnoredUserSchema = IgnoredUserSchema(username=username[1:])
+        else:
+            user: IgnoredUserSchema = IgnoredUserSchema(username=username)
+
+        res: bool = IgnoredUserRepository.set_ignored_user(user)
+        log.info(f"Does the user with username {user.username} added to ignore: {res}")
+
+        if res:
+            res_msg: str = f"The messages from {user.username} will " \
+                           f"be ignored, and won't notify"
+        else:
+            res_msg: str = f"The user with username {user.username} " \
+                           f"is already in ignore list"
+
+        await update.message.reply_text(res_msg)

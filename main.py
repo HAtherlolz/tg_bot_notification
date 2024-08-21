@@ -16,6 +16,7 @@ def start_bot():
         app.add_handler(CommandHandler("help", Bot.help_command))
         app.add_handler(CommandHandler("set_moderator", Bot.create_moderator))
         app.add_handler(CommandHandler("get_all_moderators", Bot.moderators_list))
+        app.add_handler(CommandHandler("ignore", Bot.ignore))
 
         # Register callback query handler for inline buttons
         app.add_handler(CallbackQueryHandler(Bot.default_buttons))
