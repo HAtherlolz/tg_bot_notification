@@ -2,7 +2,8 @@ import asyncio
 
 from typing import List
 
-from datetime import datetime, timedelta
+from zoneinfo import ZoneInfo
+from datetime import datetime, timedelta, time
 
 from telegram.error import TimedOut
 
@@ -19,6 +20,11 @@ from repositories.mongodb import (
 
 @celery_app.task()
 def check_msg():
+    is_working_time: bool = is_work_time()
+    if not is_working_time:
+        log.info("It is not a working time, skipping...")
+        return
+
     time_delta = datetime.now() - timedelta(minutes=14)
     log.info(f"time_delta, {time_delta}")
 
@@ -104,3 +110,18 @@ def ignored_users_to_list(
     ignored_list: List = [ign_usr.username for ign_usr in ignored_users]
     return ignored_list
 
+
+def is_work_time() -> bool:
+    utc_date_time = datetime.now()
+
+    gmt_plus_3 = ZoneInfo('Etc/GMT-3')  # 'Etc/GMT-3' corresponds to GMT+3
+    local_date_time = utc_date_time.astimezone(gmt_plus_3)
+    current_time = local_date_time.time()
+
+    start_time = time(22, 0)  # 22:00 PM
+    end_time = time(12, 0)  # 08:00 AM
+
+    # Check if current time is within the range
+    if start_time <= current_time or current_time <= end_time:
+        return False
+    return True
