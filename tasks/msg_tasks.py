@@ -119,7 +119,7 @@ def is_work_time() -> bool:
     current_time = local_date_time.time()
 
     start_time = time(22, 0)  # 22:00 PM
-    end_time = time(12, 0)  # 08:00 AM
+    end_time = time(8, 0)  # 08:00 AM
 
     # Check if current time is within the range
     if start_time <= current_time or current_time <= end_time:
