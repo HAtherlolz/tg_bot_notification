@@ -27,6 +27,10 @@ def check_msg():
 
     time_delta = datetime.now() - timedelta(minutes=14)
     log.info(f"time_delta, {time_delta}")
+    
+    if datetime.today().weekday() == 5:
+        log.info("Today is Saturday, no need to check for advertisers")
+        return
 
     last_messages_today = MessageRepository.get_last_message_from_all_group_chats_for_today()
     moderators = UserRepository.get_all_moderators()
