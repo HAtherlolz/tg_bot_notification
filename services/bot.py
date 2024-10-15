@@ -77,7 +77,7 @@ class Bot:
             [InlineKeyboardButton("Help", callback_data='help')],
             [InlineKeyboardButton("I am a moderator", callback_data='set_moderator')],
             [InlineKeyboardButton("Get all moderators", callback_data='get_all_moderators')],
-            [InlineKeyboardButton("Get all groups where bot is", callback_data='get_group_chats_bot_in')],
+            [InlineKeyboardButton("Get all groups where bot is", callback_data='get_bot_groups')],
         ]
         reply_markup = InlineKeyboardMarkup(keyboard)
         await update.message.reply_text('Hello! I am your bot. How can I assist you today?', reply_markup=reply_markup)
@@ -92,8 +92,8 @@ class Bot:
             await Bot.create_moderator(query, context)
         elif query.data == 'get_all_moderators':
             await Bot.moderators_list(query, context)
-        # elif query.data == 'ignore':
-        #     await Bot.ignore(query, context)
+        elif query.data == 'get_bot_groups':
+            await Bot.get_bot_groups(query, context)
 
     @staticmethod
     async def help_command(update: Update, context: CallbackContext) -> None:
@@ -159,7 +159,7 @@ class Bot:
         await update.message.reply_text(res_msg)
 
     @classmethod
-    async def get_group_chats_bot_in(cls, update: Update, context: CallbackContext) -> None:
+    async def get_bot_groups(cls, update: Update, context: CallbackContext) -> None:
         """Command to retrieve all group chats the bot is in."""
         group_chats = ChatRepository.get_all_group_chats()
         
