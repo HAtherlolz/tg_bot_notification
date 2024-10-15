@@ -77,6 +77,7 @@ class Bot:
             [InlineKeyboardButton("Help", callback_data='help')],
             [InlineKeyboardButton("I am a moderator", callback_data='set_moderator')],
             [InlineKeyboardButton("Get all moderators", callback_data='get_all_moderators')],
+            [InlineKeyboardButton("Get all groups where bot is", callback_data='get_group_chats_bot_in')],
         ]
         reply_markup = InlineKeyboardMarkup(keyboard)
         await update.message.reply_text('Hello! I am your bot. How can I assist you today?', reply_markup=reply_markup)
@@ -101,8 +102,9 @@ class Bot:
             "/start - Start the bot\n"
             "/help - Show help message\n"
             "/set_moderator - Make me a moderator\n"
-            "/get_all_moderators - Get all moderators"
-            "/ignore {username you want to ignore} - Set user's username to ignore for notification list"
+            "/get_all_moderators - Get all moderators\n"
+            "/ignore {username you want to ignore} - Set user's username to ignore for notification list\n"
+            "/get_bot_groups - Get all groups bot in\n"
         )
 
     @staticmethod
@@ -155,3 +157,23 @@ class Bot:
                            f"is already in ignore list"
 
         await update.message.reply_text(res_msg)
+
+    @classmethod
+    async def get_group_chats_bot_in(cls, update: Update, context: CallbackContext) -> None:
+        """Command to retrieve all group chats the bot is in."""
+        group_chats = ChatRepository.get_all_group_chats()
+        
+        log.info(f"Group chats: {group_chats}")
+        
+        if not group_chats:
+            await update.message.reply_text(
+                "I am not in any group chats!"
+            )
+            return
+
+        group_list = "\n".join([chat.name for chat in group_chats])
+
+        # Create a formatted list of groups
+        await update.message.reply_text(
+            f"Here are the groups I am in:\n\n{group_list}\n"
+        )
