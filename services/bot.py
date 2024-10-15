@@ -177,3 +177,13 @@ class Bot:
         await update.message.reply_text(
             f"Here are the groups I am in:\n\n{group_list}\n"
         )
+    
+    @staticmethod
+    async def leave_group_chat(update: Update, context: CallbackContext) -> None:
+        """Command to remove the bot from the current group chat."""
+        chat = ChatRepository.get_group_chat_by_name(update.message.text.split(" ", 1)[1])
+        await update._bot.leave_chat(chat_id=chat.chat_id)
+        # log.info(f"Bot has left the group: {update.effective_chat.title} (ID: {chat_id})")
+        await update.message.reply_text(
+            f"Bot has left the group: {update.message.text.split(' ', 1)[1]}!"
+        )

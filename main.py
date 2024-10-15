@@ -18,6 +18,7 @@ def start_bot():
         app.add_handler(CommandHandler("get_all_moderators", Bot.moderators_list))
         app.add_handler(CommandHandler("ignore", Bot.ignore))
         app.add_handler(CommandHandler("get_bot_groups", Bot.get_group_chats_bot_in))
+        app.add_handler(CommandHandler("leave_group", Bot.leave_group_chat))
 
         # Register callback query handler for inline buttons
         app.add_handler(CallbackQueryHandler(Bot.default_buttons))

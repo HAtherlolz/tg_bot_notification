@@ -48,6 +48,11 @@ class ChatRepository:
             return 0
 
         return chat.get("chat_id")
+    
+    @classmethod
+    def get_group_chat_by_name(cls, chat_name: str) -> Dict:
+        chat = cls.db.find_one({"name": chat_name})
+        return ChatSchema(**chat)
 
 
 class MessageRepository:
