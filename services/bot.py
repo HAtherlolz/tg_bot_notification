@@ -26,7 +26,6 @@ class Bot:
             update: Update,
             context: ContextTypes.DEFAULT_TYPE,
     ) -> None:
-
         if not update.message:
             return
 
@@ -64,6 +63,20 @@ class Bot:
         ChatRepository.create_chat(chat)
         if msg.name != settings.ADMINS_GROUP_CHAT_NAME:
             MessageRepository.create_msg(msg)
+    
+    @staticmethod
+    async def handle_reaction(
+            update: Update,
+            context: ContextTypes.DEFAULT_TYPE,
+    ) -> None:
+        chat_id = update.message_reaction.chat.id
+        message_id = update.message_reaction.message_id
+        user = update.message_reaction.user
+        new_reactions = update.message_reaction.new_reaction
+        log.info(f"Chat ID: {chat_id}, type : {type(chat_id)}")
+        log.info(f"Message ID: {message_id}, type : {type(message_id)}")
+        log.info(f"User: {user}, type : {type(user)}")
+        log.info(f"New Reactions: {new_reactions}, type : {type(new_reactions)}")
 
     @staticmethod
     async def send_message_to_chat(chat_id: int, message: str) -> None:

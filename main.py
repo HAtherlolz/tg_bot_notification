@@ -1,4 +1,9 @@
-from telegram.ext import ApplicationBuilder, CommandHandler, CallbackQueryHandler, MessageHandler, filters
+from telegram import Update
+from telegram.ext import (
+    ApplicationBuilder, CommandHandler,
+    CallbackQueryHandler, MessageHandler,
+    MessageReactionHandler, filters
+)
 
 from cfg.config import settings
 from cfg.database import ping_db
@@ -8,10 +13,8 @@ from utils.logs import log
 
 def start_bot():
     try:
+        app = ApplicationBuilder().token(settings.TG_TOKEN).build()
 
-        app = ApplicationBuilder().token(settings.TG_TOKEN).read_timeout(7).get_updates_read_timeout(42).build()
-
-        # Register command handlers
         app.add_handler(CommandHandler("start", Bot.start))
         app.add_handler(CommandHandler("help", Bot.help_command))
         app.add_handler(CommandHandler("set_moderator", Bot.create_moderator))
@@ -20,15 +23,15 @@ def start_bot():
         app.add_handler(CommandHandler("get_bot_groups", Bot.get_bot_groups))
         app.add_handler(CommandHandler("leave_group", Bot.leave_group_chat))
 
-        # Register callback query handler for inline buttons
+        message_handler = MessageHandler(filters.TEXT & ~filters.COMMAND, Bot.handle_message)
+        reactions_handler = MessageReactionHandler(Bot.handle_reaction)
+
+        app.add_handler(message_handler)
+        app.add_handler(reactions_handler)
         app.add_handler(CallbackQueryHandler(Bot.default_buttons))
 
-        # Register message handler for other text messages
-        message_handler = MessageHandler(filters.TEXT & ~filters.COMMAND, Bot.handle_message)
-        app.add_handler(message_handler)
-
         log.info("Bot is running and listening")
-        app.run_polling()
+        app.run_polling(allowed_updates=Update.ALL_TYPES)
     except BaseException as e:
         log.info(f"Bot Error: {e}")
         start_bot()
