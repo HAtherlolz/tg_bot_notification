@@ -19,6 +19,8 @@ class Settings(BaseConfig):
 
     # ADMINS GROUP CHAT NAME
     ADMINS_GROUP_CHAT_NAME: str = os.getenv("ADMINS_GROUP_CHAT_NAME")
+    
+    GROUPS_TO_MONITOR_REACTIONS: list = os.getenv("GROUPS_TO_MONITOR_REACTIONS").split(",")
 
 
 settings = Settings()

@@ -85,7 +85,14 @@ class Bot:
             username=username,
         )
         
-        MessageRepository.mark_msg_as_notified(message)
+        log.info(f"GROUPS_TO_MONITOR_REACTIONS: {settings.GROUPS_TO_MONITOR_REACTIONS}")
+        if update.message_reaction.chat.title in settings.GROUPS_TO_MONITOR_REACTIONS:
+            log.info(f"Message is in the list of groups to monitor reactions")
+            try:
+                log.info(f"Trying to mark message as notified after reaction")
+                MessageRepository.mark_msg_as_notified(message)
+            except Exception as e:
+                log.info(f"Error while marking message as notified: {e}")
 
     @staticmethod
     async def send_message_to_chat(chat_id: int, message: str) -> None:
