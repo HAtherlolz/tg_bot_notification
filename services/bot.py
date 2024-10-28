@@ -15,7 +15,7 @@ from schemas.igonred_users import IgnoredUserSchema
 from repositories.mongodb import (
     ChatRepository, MessageRepository,
     MessageSchema, ChatSchema, UserRepository,
-    IgnoredUserRepository
+    IgnoredUserRepository, MessageSchemaUpdate
 )
 
 
@@ -71,12 +71,21 @@ class Bot:
     ) -> None:
         chat_id = update.message_reaction.chat.id
         message_id = update.message_reaction.message_id
-        user = update.message_reaction.user
+        username = update.message_reaction.user.username
         new_reactions = update.message_reaction.new_reaction
         log.info(f"Chat ID: {chat_id}, type : {type(chat_id)}")
         log.info(f"Message ID: {message_id}, type : {type(message_id)}")
-        log.info(f"User: {user}, type : {type(user)}")
+        log.info(f"User: {username}, type : {type(username)}")
         log.info(f"New Reactions: {new_reactions}, type : {type(new_reactions)}")
+        # TODO: afted testing delete all above
+        message = MessageSchemaUpdate(
+            # message_id=message_id,
+            chat_id=chat_id,
+            name=update.message_reaction.chat.title,
+            username=username,
+        )
+        
+        MessageRepository.mark_msg_as_notified(message)
 
     @staticmethod
     async def send_message_to_chat(chat_id: int, message: str) -> None:

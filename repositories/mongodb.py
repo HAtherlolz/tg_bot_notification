@@ -1,11 +1,12 @@
 from typing import List, Dict
 from datetime import datetime
 
+from pymongo import DESCENDING
 from pymongo.collection import Collection
 
 from schemas.chats import ChatSchema
 from schemas.users import UserSchema
-from schemas.messages import MessageSchema
+from schemas.messages import MessageSchema, MessageSchemaUpdate
 from schemas.igonred_users import IgnoredUserSchema
 
 from cfg.config import settings
@@ -84,13 +85,20 @@ class MessageRepository:
                 },
                 sort=[("created_at", -1)])
             if last_msg:
+                if last_msg["is_notified"] is True:
+                    continue
                 last_msgs.append(MessageSchema(**last_msg))
         return last_msgs
 
     @classmethod
     def mark_msg_as_notified(cls, msg: MessageSchema) -> None:
+        last_message = cls.db.find_one(
+            {"chat_id": msg.chat_id, "is_notified": False},
+            sort=[("_id", DESCENDING)]
+        )
+            
         cls.db.update_one(
-            {"chat_id": msg.chat_id, "created_at": msg.created_at},
+            {"_id": last_message["_id"]},
             {"$set": {"is_notified": True}}
         )
 
