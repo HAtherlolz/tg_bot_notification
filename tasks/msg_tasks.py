@@ -49,7 +49,13 @@ def check_msg():
         first_name = last_message.first_name if last_message.first_name else ''
         last_name = last_message.last_name if last_message.last_name else ''
         
-        log.info(f"\n----------------------------------\nLast message: {last_message}\n----------------------------------\n")
+        if last_message.name == "Deals confirmations - Test":
+            log.info("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+            log.info(last_message.created_at < time_delta)
+            log.info(last_message.username not in moderators_usernames)
+            log.info(("stark" not in first_name.lower()) and (last_name.lower() != "stark"))
+            log.info(last_message.message.lower() not in messages_to_ignore)
+            log.info(last_message.username not in ign_usr_list)
 
         if (
                 # Check if message was created 15 minute ago
