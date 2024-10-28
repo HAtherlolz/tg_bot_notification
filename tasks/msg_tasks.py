@@ -48,6 +48,8 @@ def check_msg():
     for last_message in last_messages_today:
         first_name = last_message.first_name if last_message.first_name else ''
         last_name = last_message.last_name if last_message.last_name else ''
+        
+        log.info(f"\n----------------------------------\nLast message: {last_message}\n----------------------------------\n")
 
         if (
                 # Check if message was created 15 minute ago
