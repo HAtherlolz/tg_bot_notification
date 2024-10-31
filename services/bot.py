@@ -42,7 +42,7 @@ class Bot:
         username = update.message.from_user.username
         first_name = getattr(update.message.from_user, 'first_name', None)
         last_name = getattr(update.message.from_user, 'last_name', None)
-
+        
         log.info(f"Chat ID: {chat_id}, type : {type(chat_id)}")  # Optional[int]
         log.info(f"Chat Name: {chat_name}, type : {type(chat_name)}")  # Optional[str]
         log.info(f"Message: {message_text}, type : {type(message_text)}")  # Optional[str]
@@ -93,6 +93,34 @@ class Bot:
                 MessageRepository.mark_msg_as_notified(message)
             except Exception as e:
                 log.info(f"Error while marking message as notified: {e}")
+    
+    @staticmethod
+    async def handle_animation(
+        update: Update,
+        context: ContextTypes.DEFAULT_TYPE,
+    ) -> None:
+        log.info("ANIMATION HANDLER")
+        
+        utc_date_time = update.message.date if hasattr(update.message, 'date') else None
+        if not utc_date_time:
+            utc_date_time = datetime.now()
+        gmt_plus_3 = ZoneInfo('Etc/GMT-3')  # 'Etc/GMT-3' corresponds to GMT+3
+        local_date_time = utc_date_time.astimezone(gmt_plus_3)
+        
+        chat_id = update.message.chat.id
+        chat_name = update.message.chat.title
+        username = update.effective_sender.username
+        first_name = update.effective_sender.first_name
+        last_name = update.effective_sender.last_name
+        msg: MessageSchema = MessageSchema(
+            chat_id=chat_id, name=chat_name,
+            message="GIF", username=username,
+            created_at=local_date_time, first_name=first_name,
+            last_name=last_name
+        )
+        animation = update.message.animation.file_name
+        log.info(f"Message: {animation}, type : {type(animation)}")
+        MessageRepository.create_msg(msg)
 
     @staticmethod
     async def send_message_to_chat(chat_id: int, message: str) -> None:

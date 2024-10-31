@@ -25,9 +25,11 @@ def start_bot():
 
         message_handler = MessageHandler(filters.TEXT & ~filters.COMMAND, Bot.handle_message)
         reactions_handler = MessageReactionHandler(Bot.handle_reaction)
+        animations_handler = MessageHandler(filters.ANIMATION, Bot.handle_animation)
 
         app.add_handler(message_handler)
         app.add_handler(reactions_handler)
+        app.add_handler(animations_handler)
         app.add_handler(CallbackQueryHandler(Bot.default_buttons))
 
         log.info("Bot is running and listening")
