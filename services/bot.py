@@ -69,8 +69,17 @@ class Bot:
             update: Update,
             context: ContextTypes.DEFAULT_TYPE,
     ) -> None:
+        utc_date_time = update.message.date if hasattr(update.message, 'date') else None
+        if not utc_date_time:
+            utc_date_time = datetime.now()
+        gmt_plus_3 = ZoneInfo('Etc/GMT-3')  # 'Etc/GMT-3' corresponds to GMT+3
+        local_date_time = utc_date_time.astimezone(gmt_plus_3)
+        
         chat_id = update.message_reaction.chat.id
+        chat_name = update.message_reaction.chat.title
         message_id = update.message_reaction.message_id
+        first_name = update.message_reaction.user.first_name
+        last_name = update.message_reaction.user.last_name
         username = update.message_reaction.user.username
         new_reactions = update.message_reaction.new_reaction
         log.info(f"Chat ID: {chat_id}, type : {type(chat_id)}")
@@ -93,6 +102,13 @@ class Bot:
                 MessageRepository.mark_msg_as_notified(message)
             except Exception as e:
                 log.info(f"Error while marking message as notified: {e}")
+        msg: MessageSchema = MessageSchema(
+            chat_id=chat_id, name=chat_name,
+            message="REACTION", username=username,
+            created_at=local_date_time, first_name=first_name,
+            last_name=last_name
+        )
+        MessageRepository.create_msg(msg)
     
     @staticmethod
     async def handle_animation(

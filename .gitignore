@@ -13,3 +13,4 @@ __pycache__/
 token.json
 tg-bot-token.json
 celerybeat-schedule
+test_airtable.py
