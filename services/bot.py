@@ -87,21 +87,21 @@ class Bot:
         log.info(f"User: {username}, type : {type(username)}")
         log.info(f"New Reactions: {new_reactions}, type : {type(new_reactions)}")
         # TODO: afted testing delete all above
-        message = MessageSchemaUpdate(
-            # message_id=message_id,
-            chat_id=chat_id,
-            name=update.message_reaction.chat.title,
-            username=username,
-        )
+        # message = MessageSchemaUpdate(
+        #     # message_id=message_id,
+        #     chat_id=chat_id,
+        #     name=update.message_reaction.chat.title,
+        #     username=username,
+        # )
         
-        log.info(f"GROUPS_TO_MONITOR_REACTIONS: {settings.GROUPS_TO_MONITOR_REACTIONS}")
-        if update.message_reaction.chat.title in settings.GROUPS_TO_MONITOR_REACTIONS:
-            log.info(f"Message is in the list of groups to monitor reactions")
-            try:
-                log.info(f"Trying to mark message as notified after reaction")
-                MessageRepository.mark_msg_as_notified(message)
-            except Exception as e:
-                log.info(f"Error while marking message as notified: {e}")
+        # log.info(f"GROUPS_TO_MONITOR_REACTIONS: {settings.GROUPS_TO_MONITOR_REACTIONS}")
+        # if update.message_reaction.chat.title in settings.GROUPS_TO_MONITOR_REACTIONS:
+        #     log.info(f"Message is in the list of groups to monitor reactions")
+        #     try:
+        #         log.info(f"Trying to mark message as notified after reaction")
+        #         MessageRepository.mark_msg_as_notified(message)
+        #     except Exception as e:
+        #         log.info(f"Error while marking message as notified: {e}")
         msg: MessageSchema = MessageSchema(
             chat_id=chat_id, name=chat_name,
             message="REACTION", username=username,
