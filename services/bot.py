@@ -102,11 +102,7 @@ class Bot:
         #         MessageRepository.mark_msg_as_notified(message)
         #     except Exception as e:
         #         log.info(f"Error while marking message as notified: {e}")
-        log.info(f"First Name: {first_name}, last name: {last_name}, {'Stark' in first_name}, {'Stark' in last_name}")
-        if "Stark" in first_name or "Stark" in last_name:
-            log.info(f"IF STATEMENT")
-
-        if "Stark" in first_name or "Stark" in last_name:
+        if "stark" in first_name.lower() or "stark" in last_name.lower():
             msg: MessageSchema = MessageSchema(
                 chat_id=chat_id, name=chat_name,
                 message="REACTION", username=username,
