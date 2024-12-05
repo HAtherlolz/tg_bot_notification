@@ -102,13 +102,14 @@ class Bot:
         #         MessageRepository.mark_msg_as_notified(message)
         #     except Exception as e:
         #         log.info(f"Error while marking message as notified: {e}")
-        msg: MessageSchema = MessageSchema(
-            chat_id=chat_id, name=chat_name,
-            message="REACTION", username=username,
-            created_at=local_date_time, first_name=first_name,
-            last_name=last_name
-        )
-        MessageRepository.create_msg(msg)
+        if "Stark" in first_name or "Stark" in last_name:
+            msg: MessageSchema = MessageSchema(
+                chat_id=chat_id, name=chat_name,
+                message="REACTION", username=username,
+                created_at=local_date_time, first_name=first_name,
+                last_name=last_name
+            )
+            MessageRepository.create_msg(msg)
     
     @staticmethod
     async def handle_animation(
