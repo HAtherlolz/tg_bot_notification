@@ -84,6 +84,7 @@ class Bot:
         new_reactions = update.message_reaction.new_reaction
         log.info(f"Chat ID: {chat_id}, type : {type(chat_id)}")
         log.info(f"Message ID: {message_id}, type : {type(message_id)}")
+        log.info(f"First Name: {first_name}, last name: {last_name}")
         log.info(f"User: {username}, type : {type(username)}")
         log.info(f"New Reactions: {new_reactions}, type : {type(new_reactions)}")
         # TODO: afted testing delete all above
