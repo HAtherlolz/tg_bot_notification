@@ -10,9 +10,13 @@ load_dotenv()
 class Settings(BaseConfig):
     # TG BOT CREDS
     TG_TOKEN: str = os.getenv("TG_TOKEN")
+    MONGO_INITDB_ROOT_USERNAME: str = os.getenv("MONGO_INITDB_ROOT_USERNAME")
+    MONGO_INITDB_ROOT_PASSWORD: str = os.getenv("MONGO_INITDB_ROOT_PASSWORD")
+    # MONGO_INITDB_DATABASE: str = os.getenv("MONGO_INITDB_DATABASE")
 
     # DATABASE
-    DATABASE_URL: str = "mongodb://mongo:27017/"
+    # DATABASE_URL: str = f"mongodb://{MONGO_INITDB_ROOT_USERNAME}:{MONGO_INITDB_ROOT_PASSWORD}@mongo:27017/"
+    DATABASE_URL: str = f"mongodb://mongodb:27017/"
 
     # REDIS
     REDIS_URL: str = "redis://redis/0"

@@ -107,15 +107,15 @@ class Bot:
             first_name = ""
         if last_name is None:
             last_name = ""
-
-        if "stark" in first_name.lower() or "stark" in last_name.lower():
-            msg: MessageSchema = MessageSchema(
-                chat_id=chat_id, name=chat_name,
-                message="REACTION", username=username,
-                created_at=local_date_time, first_name=first_name,
-                last_name=last_name
-            )
-            MessageRepository.create_msg(msg)
+        
+        # if "stark" in first_name.lower() or "stark" in last_name.lower():
+        msg: MessageSchema = MessageSchema(
+            chat_id=chat_id, name=chat_name,
+            message="REACTION", username=username,
+            created_at=local_date_time, first_name=first_name,
+            last_name=last_name
+        )
+        MessageRepository.create_msg(msg)
     
     @staticmethod
     async def handle_animation(

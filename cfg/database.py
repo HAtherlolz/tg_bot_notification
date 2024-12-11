@@ -5,7 +5,7 @@ from utils.logs import log
 
 
 db_url = settings.DATABASE_URL
-client = MongoClient('mongodb://mongo:27017/')
+client = MongoClient(db_url)
 db = client["DB"]
 msg_db = db["messages"]
 chat_db = db["chats"]

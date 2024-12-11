@@ -7,18 +7,25 @@ services:
     env_file: .env
     command: sh -c "python main.py"
     depends_on:
-      - mongo
+      - mongodb
       - redis
     volumes:
      - .:/app
 
-  mongo:
+  mongodb:
     image: mongo:latest
-    container_name: mongo
+    container_name: mongodb
+    # environment:
+    #   - AUTH=yes
+    #   - MONGO_INITDB_ROOT_USERNAME=aduser
+    #   - MONGO_INITDB_ROOT_PASSWORD=pass123
+    #   - MONGO_INITDB_DATABASE=starkDB
     ports:
       - "27017:27017"
     volumes:
       - mongo_data:/data/db
+    # env_file:
+    #   - .env
 
   redis:
     image: redis
