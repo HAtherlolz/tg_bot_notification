@@ -9,6 +9,8 @@ services:
     depends_on:
       - mongodb
       - redis
+    networks:
+      - shared_network
     volumes:
      - .:/app
 
