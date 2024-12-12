@@ -15,15 +15,12 @@ services:
   mongodb:
     image: mongo:latest
     container_name: mongodb
-    # environment:
-    #   - AUTH=yes
-    #   - MONGO_INITDB_ROOT_USERNAME=aduser
-    #   - MONGO_INITDB_ROOT_PASSWORD=pass123
-    #   - MONGO_INITDB_DATABASE=starkDB
     ports:
       - "27017:27017"
     volumes:
       - mongo_data:/data/db
+    networks:
+      - shared_network
     # env_file:
     #   - .env
 
@@ -60,3 +57,7 @@ services:
 
 volumes:
   mongo_data:
+
+networks:
+  shared_network:
+    external: true
