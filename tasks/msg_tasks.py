@@ -78,12 +78,12 @@ def check_msg():
                     last_message.username not in ign_usr_list
                 )
         ):
-            print('NOTIFICATION message', last_message)
-            advertisers.append({
-                "chat_id": last_message.chat_id,
-                "username": last_message.username,
-                "name": last_message.name,
-            })
+            if not any(ad['name'] == last_message.name for ad in advertisers):
+                advertisers.append({
+                    "chat_id": last_message.chat_id,
+                    "username": last_message.username,
+                    "name": last_message.name,
+                })
 
     if advertisers:
         notification_message = (
